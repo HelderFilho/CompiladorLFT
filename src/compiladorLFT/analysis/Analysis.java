@@ -74,7 +74,6 @@ public interface Analysis extends Switch
     void caseTParenteseD(TParenteseD node);
     void caseTParenteseE(TParenteseE node);
     void caseTPausa(TPausa node);
-    void caseTPontoFinal(TPontoFinal node);
     void caseTPontoVirgula(TPontoVirgula node);
     void caseTRecebe(TRecebe node);
     void caseTResto(TResto node);

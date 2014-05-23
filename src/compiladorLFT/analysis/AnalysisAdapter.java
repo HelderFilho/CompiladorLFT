@@ -447,12 +447,6 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseTPontoFinal(TPontoFinal node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
     public void caseTPontoVirgula(TPontoVirgula node)
     {
         defaultCase(node);

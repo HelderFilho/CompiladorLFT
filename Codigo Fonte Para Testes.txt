@@ -1,5 +1,6 @@
-//algoritmo "condicaoNotas"
-//var 
+fim.  inicio jhd_ds
+/*algoritmo "condicaoNotas"
+var 
 nome:vetor [1..3] de caracter 
 nota:vetor [1..3] de inteiro 
 A,x,B:inteiro 
@@ -28,3 +29,4 @@ para A de 1 ate 3 faca
 escreval (" Nome: ",nome[A]," Nota: ",nota[A]) 
 fim para 
 Fim algoritmo
+*/
