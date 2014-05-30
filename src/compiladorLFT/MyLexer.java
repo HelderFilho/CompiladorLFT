@@ -12,7 +12,7 @@ public class MyLexer extends Lexer
   { super(in);
   }
   // We define a filter that recognizes nested comments.
-  protected void filter()
+  protected void filter() throws LexerException
   { // if we are in the comment state
     if(state.equals(State.COMMENT))
     { // if we are just entering this state
@@ -32,8 +32,7 @@ public class MyLexer extends Lexer
         else if(token instanceof TCommentEnd)
           count--;
     	if (token instanceof EOF){
-    		System.err.println ("Token Desconhecido ou Invalido Encontrado, o analisador será parado");
-    				System.exit(0);
+    		throw new LexerException(null,"Token Desconhecido ou Invalido Encontrado, o analisador será parado" );  
 		}if(count != 0){
         	token = null; // continue to scan the input.
 
