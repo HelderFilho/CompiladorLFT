@@ -69,6 +69,186 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseStart(Start node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAProgramas(AProgramas node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseATipoDeclaracao(ATipoDeclaracao node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAConstDeclaracao(AConstDeclaracao node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAVarRepeat(AVarRepeat node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseATesteComando(ATesteComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseALeiaComando(ALeiaComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAEscrevaComando(AEscrevaComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseASeComando(ASeComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAAvalieComando(AAvalieComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAEnquantoComando(AEnquantoComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseARepitaComando(ARepitaComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAParaComando(AParaComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAParaPassoComando(AParaPassoComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseASenaoComando(ASenaoComando node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAComandoRepeat(AComandoRepeat node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAValors(AValors node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAExps(AExps node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAComandos(AComandos node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAInteiroTipo(AInteiroTipo node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseARealTipo(ARealTipo node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseACaracterTipo(ACaracterTipo node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAIdentificadorVar(AIdentificadorVar node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAStringVar(AStringVar node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAIdentificadors(AIdentificadors node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAStringValor(AStringValor node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseANumeroIntValor(ANumeroIntValor node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseANumeroRealValor(ANumeroRealValor node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAExp(AExp node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAExpLogica(AExpLogica node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTDoisPontosFinais(TDoisPontosFinais node)
     {
         defaultCase(node);
@@ -237,6 +417,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTAvalie(TAvalie node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTCaracter(TCaracter node)
     {
         defaultCase(node);
@@ -256,6 +442,12 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTColcheteE(TColcheteE node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseTConst(TConst node)
     {
         defaultCase(node);
     }
@@ -441,6 +633,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTPasso(TPasso node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTPausa(TPausa node)
     {
         defaultCase(node);
@@ -477,6 +675,18 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTNumeroInt(TNumeroInt node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseTNumeroReal(TNumeroReal node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTVirgula(TVirgula node)
     {
         defaultCase(node);
@@ -484,6 +694,12 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTComentarioSimples(TComentarioSimples node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseTString(TString node)
     {
         defaultCase(node);
     }
