@@ -2,17 +2,15 @@
 
 package compiladorLFT.node;
 
+import java.util.*;
 import compiladorLFT.analysis.*;
 
 @SuppressWarnings("nls")
 public final class AProgramas extends PProgramas
 {
-    private TPrograma _programa_;
     private TIdentificador _identificador_;
-    private TInicio _inicio_;
-    private PDeclaracao _declaracao_;
-    private PComando _comando_;
-    private TFim _fim_;
+    private final LinkedList<PDeclaracao> _declaracao_ = new LinkedList<PDeclaracao>();
+    private final LinkedList<PComando> _comando_ = new LinkedList<PComando>();
 
     public AProgramas()
     {
@@ -20,25 +18,16 @@ public final class AProgramas extends PProgramas
     }
 
     public AProgramas(
-        @SuppressWarnings("hiding") TPrograma _programa_,
         @SuppressWarnings("hiding") TIdentificador _identificador_,
-        @SuppressWarnings("hiding") TInicio _inicio_,
-        @SuppressWarnings("hiding") PDeclaracao _declaracao_,
-        @SuppressWarnings("hiding") PComando _comando_,
-        @SuppressWarnings("hiding") TFim _fim_)
+        @SuppressWarnings("hiding") List<?> _declaracao_,
+        @SuppressWarnings("hiding") List<?> _comando_)
     {
         // Constructor
-        setPrograma(_programa_);
-
         setIdentificador(_identificador_);
-
-        setInicio(_inicio_);
 
         setDeclaracao(_declaracao_);
 
         setComando(_comando_);
-
-        setFim(_fim_);
 
     }
 
@@ -46,43 +35,15 @@ public final class AProgramas extends PProgramas
     public Object clone()
     {
         return new AProgramas(
-            cloneNode(this._programa_),
             cloneNode(this._identificador_),
-            cloneNode(this._inicio_),
-            cloneNode(this._declaracao_),
-            cloneNode(this._comando_),
-            cloneNode(this._fim_));
+            cloneList(this._declaracao_),
+            cloneList(this._comando_));
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAProgramas(this);
-    }
-
-    public TPrograma getPrograma()
-    {
-        return this._programa_;
-    }
-
-    public void setPrograma(TPrograma node)
-    {
-        if(this._programa_ != null)
-        {
-            this._programa_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._programa_ = node;
     }
 
     public TIdentificador getIdentificador()
@@ -110,155 +71,84 @@ public final class AProgramas extends PProgramas
         this._identificador_ = node;
     }
 
-    public TInicio getInicio()
-    {
-        return this._inicio_;
-    }
-
-    public void setInicio(TInicio node)
-    {
-        if(this._inicio_ != null)
-        {
-            this._inicio_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._inicio_ = node;
-    }
-
-    public PDeclaracao getDeclaracao()
+    public LinkedList<PDeclaracao> getDeclaracao()
     {
         return this._declaracao_;
     }
 
-    public void setDeclaracao(PDeclaracao node)
+    public void setDeclaracao(List<?> list)
     {
-        if(this._declaracao_ != null)
+        for(PDeclaracao e : this._declaracao_)
         {
-            this._declaracao_.parent(null);
+            e.parent(null);
         }
+        this._declaracao_.clear();
 
-        if(node != null)
+        for(Object obj_e : list)
         {
-            if(node.parent() != null)
+            PDeclaracao e = (PDeclaracao) obj_e;
+            if(e.parent() != null)
             {
-                node.parent().removeChild(node);
+                e.parent().removeChild(e);
             }
 
-            node.parent(this);
+            e.parent(this);
+            this._declaracao_.add(e);
         }
-
-        this._declaracao_ = node;
     }
 
-    public PComando getComando()
+    public LinkedList<PComando> getComando()
     {
         return this._comando_;
     }
 
-    public void setComando(PComando node)
+    public void setComando(List<?> list)
     {
-        if(this._comando_ != null)
+        for(PComando e : this._comando_)
         {
-            this._comando_.parent(null);
+            e.parent(null);
         }
+        this._comando_.clear();
 
-        if(node != null)
+        for(Object obj_e : list)
         {
-            if(node.parent() != null)
+            PComando e = (PComando) obj_e;
+            if(e.parent() != null)
             {
-                node.parent().removeChild(node);
+                e.parent().removeChild(e);
             }
 
-            node.parent(this);
+            e.parent(this);
+            this._comando_.add(e);
         }
-
-        this._comando_ = node;
-    }
-
-    public TFim getFim()
-    {
-        return this._fim_;
-    }
-
-    public void setFim(TFim node)
-    {
-        if(this._fim_ != null)
-        {
-            this._fim_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._fim_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._programa_)
             + toString(this._identificador_)
-            + toString(this._inicio_)
             + toString(this._declaracao_)
-            + toString(this._comando_)
-            + toString(this._fim_);
+            + toString(this._comando_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._programa_ == child)
-        {
-            this._programa_ = null;
-            return;
-        }
-
         if(this._identificador_ == child)
         {
             this._identificador_ = null;
             return;
         }
 
-        if(this._inicio_ == child)
+        if(this._declaracao_.remove(child))
         {
-            this._inicio_ = null;
             return;
         }
 
-        if(this._declaracao_ == child)
+        if(this._comando_.remove(child))
         {
-            this._declaracao_ = null;
-            return;
-        }
-
-        if(this._comando_ == child)
-        {
-            this._comando_ = null;
-            return;
-        }
-
-        if(this._fim_ == child)
-        {
-            this._fim_ = null;
             return;
         }
 
@@ -269,40 +159,46 @@ public final class AProgramas extends PProgramas
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._programa_ == oldChild)
-        {
-            setPrograma((TPrograma) newChild);
-            return;
-        }
-
         if(this._identificador_ == oldChild)
         {
             setIdentificador((TIdentificador) newChild);
             return;
         }
 
-        if(this._inicio_ == oldChild)
+        for(ListIterator<PDeclaracao> i = this._declaracao_.listIterator(); i.hasNext();)
         {
-            setInicio((TInicio) newChild);
-            return;
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PDeclaracao) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
+
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
-        if(this._declaracao_ == oldChild)
+        for(ListIterator<PComando> i = this._comando_.listIterator(); i.hasNext();)
         {
-            setDeclaracao((PDeclaracao) newChild);
-            return;
-        }
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PComando) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
 
-        if(this._comando_ == oldChild)
-        {
-            setComando((PComando) newChild);
-            return;
-        }
-
-        if(this._fim_ == oldChild)
-        {
-            setFim((TFim) newChild);
-            return;
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         throw new RuntimeException("Not a child.");

@@ -7,7 +7,7 @@ import compiladorLFT.analysis.*;
 @SuppressWarnings("nls")
 public final class AStringValor extends PValor
 {
-    private TString _string_;
+    private PString _string_;
 
     public AStringValor()
     {
@@ -15,7 +15,7 @@ public final class AStringValor extends PValor
     }
 
     public AStringValor(
-        @SuppressWarnings("hiding") TString _string_)
+        @SuppressWarnings("hiding") PString _string_)
     {
         // Constructor
         setString(_string_);
@@ -35,12 +35,12 @@ public final class AStringValor extends PValor
         ((Analysis) sw).caseAStringValor(this);
     }
 
-    public TString getString()
+    public PString getString()
     {
         return this._string_;
     }
 
-    public void setString(TString node)
+    public void setString(PString node)
     {
         if(this._string_ != null)
         {
@@ -86,7 +86,7 @@ public final class AStringValor extends PValor
         // Replace child
         if(this._string_ == oldChild)
         {
-            setString((TString) newChild);
+            setString((PString) newChild);
             return;
         }
 

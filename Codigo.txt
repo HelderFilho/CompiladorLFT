@@ -1,0 +1,21 @@
+programa Teste
+
+
+inicio
+    inteiro a , c , div , div2 , div3 , soma , d;
+    
+    
+    escrever "Valor de 0 a 999: "
+    ler a
+    a <- a
+    d <- a / 10
+    c <- d
+    div <- c % 10
+    div2 <- c / 10
+    div3 <- a % 10
+    soma <- div + div2 + div3
+    escrever "\n Digito: " , div2
+    escrever "\n Digito: " , div
+    escrever "\n Digito: " , div3
+    escrever "\n Resultado final: " , soma
+fim.

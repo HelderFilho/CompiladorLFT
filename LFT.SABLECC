@@ -1,0 +1,290 @@
+Package compiladorLFT;
+
+
+Helpers
+
+digit = ['0'..'9'];
+up_letter= ['A'..'Z'];
+down_letter = ['a'..'z'];
+letter = (up_letter|down_letter)*;
+cr = 13;
+  
+lf = 10;
+
+all = [0x0..0xfffff];
+tab = 9;
+blank = ' ';
+l_com = '/*';
+r_com = '*/';
+sublinhado = '_';
+eol = cr lf| cr|lf;
+corpo_coment_simples = [all- [cr + lf]];
+
+States
+normal,
+comment;
+
+Tokens
+{normal}dois_pontos_finais = '..';
+{normal}fim_algoritmo = 'fim algoritmo';
+{normal}fim_para = 'fim para';
+{normal}faca = 'faca';
+{normal}para = 'para';
+{normal}inicio = 'inicio';
+{normal}leia = 'leia';
+{normal}logico = 'logico';
+{normal}nao = 'nao';
+{normal}ou = 'ou';
+{normal}inteiro = 'inteiro';
+{normal}procedimento = 'procedimento';
+{normal}programa = 'programa';
+{normal}real = 'real';
+{normal}repita = 'repita';
+{normal}retorne = 'retorne';
+{normal}se = 'se';
+{normal}senao = 'senao';
+{normal}variavel = 'var';
+{normal}verdadeiro = 'verdadeiro';
+{normal}xou = 'xou';
+{normal}aleatorio = 'aleatorio';
+{normal}algoritmo = 'algoritmo';
+{normal}arquivo = 'arquivo';
+{normal}aspas_duplas = '"';
+{normal}aspas_simples = ''';
+{normal}ate = 'ate';
+{normal}avalie = 'avalie';
+{normal}caracter = 'caracter';
+{normal}caso = 'caso';
+{normal} char = corpo_coment_simples*;
+{normal}colchete_d = ']';
+{normal}colchete_e = '[';
+{normal} const = 'const';
+{normal}de = 'de';
+{normal}diferente = '<>';
+{normal}dividido = '/';
+{normal}dois_pontos = ':';
+{normal}e = 'e';
+{normal}enquanto = 'enquanto';
+{normal}entao = 'entao';
+{normal}escolha = 'escolha';
+{normal}escreva = 'escreva';
+{normal}escreval = 'escreval';
+{normal}falso = 'falso';
+{normal}fim = 'fim.';
+{normal}fim_enquanto = 'fim enquanto';
+{normal}fim_funcao = 'fim funcao';
+{normal}fim_procedimento = 'fim procedimento';
+{normal}fim_repita = 'fim repita';
+{normal}fim_se = 'fim se';
+{normal}fim_var = 'fim var';
+{normal}fim_avalie = 'fim avalie';
+{normal}funcao = 'funcao';
+{normal}identificador = letter (letter|digit|sublinhado)* | sublinhado (letter|digit|sublinhado)*;
+{normal}igual = '=';
+{normal}numero = digit|digit*;
+{normal}maior = '>';
+{normal}maior_igual = '>=';
+{normal}mais = '+';
+{normal}menor = '<';
+{normal}menor_igual = '<=';
+{normal}menos = '-';
+{normal}parentese_d = ')';
+{normal}parentese_e = '(';
+{normal}passo = 'passo';
+{normal}pausa = 'pausa';
+{normal}ponto_virgula = ';';
+{normal}recebe = '<-';
+{normal}resto = '%';
+{normal}vazio = blank | cr lf | cr| lf | tab;
+{normal}vezes = '*';
+{normal} numero_int = digit digit*;
+{normal} numero_real = digit digit* ('.') digit digit*;
+{normal} var_str = 'var_str';
+{normal}virgula = ',';
+{normal} xor = 'xor';
+{normal}comentario_simples = '//' corpo_coment_simples* eol;
+{normal -> comment, comment}
+	comment = '/*';
+{comment} comment_end = '*/';
+{comment} comment_body = [all-['*' +'/']]*;
+{comment} star = '*';
+{comment} slash ='/';
+{comment} fim_texto = eol;
+
+Ignored Tokens
+vazio,
+comment;
+
+
+
+Productions 
+
+programas {->programas} = programa identificador inicio declaracoes comandos fim {-> New programas(identificador,[declaracoes.declaracao],[comandos.comando])};
+
+
+declaracoes {-> declaracao*} = declaracao+ {-> [declaracao]};
+
+declaracao {-> declaracao} = {variaveis} tipo dois_pontos var identificadores* ponto_virgula {-> New declaracao.variaveis(tipo,[var.var,identificadores.var])}
+     		| {constantes} const var valor ponto_virgula {-> New declaracao.constantes(const,var,valor)};
+
+
+identificadores {-> var} = {multiplo} virgula var {-> var};
+
+comandos {-> comando*} = comando+ {-> [comando]};
+
+
+var {-> var} = {identificador} identificador {-> New var.identificador (identificador)}
+    	| {vetor} identificador colchete_e numero_int colchete_d {-> New var.vetor (identificador, colchete_e, numero_int, colchete_d)};
+
+valor {-> valor} = {string} string {-> New valor.string (string)}
+    		| {inteiro} numero_int {-> New valor.inteiro (numero_int)}
+    		| {real} numero_real {-> New valor.real (numero_real)};
+    		
+string {-> string} = {ssimples} [left]:aspas_simples char [right]:aspas_simples ponto_virgula {-> New string.ssimples (char)}
+	|{schar} caracter dois_pontos var_str colchete_e numero_int colchete_d ponto_virgula {-> New string.schar (caracter)};
+
+
+tipo {->tipo} = {inteiro} inteiro {-> New tipo.inteiro (inteiro)}
+     | {string} string  {-> New tipo.string (string)}
+     | {real} real {->New tipo.real (real)}; 
+    		
+comando  = {recebe} var recebe exp ponto_virgula {-> New comando.receber_exp (var, exp)  }
+    		| {recebe_explog} var recebe exp_logica ponto_virgula  {-> New comando.receber_explog (var , exp_logica)  }   
+    		| {escreva} escreva parentese_e exp exps parentese_d ponto_virgula {-> New comando.escreva_exp (exp,[exps.exp_aux])}
+    		| {escreva_explog} escreva parentese_e exp_logica exps parentese_d ponto_virgula {-> New comando.escreva_explog (exp_logica,[exps.exp_aux])}   
+    		| {leia} leia parentese_e variaveis parentese_d ponto_virgula {-> New comando.leia ([variaveis.var])  } 
+    		| {se_explog} se parentese_e exp_logica parentese_d entao sequencia_comandos fim_se ponto_virgula {-> New comando.se_explog (exp_logica, [sequencia_comandos.comando])  }   
+    		| {se_explog_senao} se parentese_e exp_logica parentese_d entao [se_v]:sequencia_comandos senao [senao_f]:sequencia_comandos fim_se ponto_virgula {-> New comando.se_explog_senao (exp_logica, [se_v.comando], [senao_f.comando])  }   
+    		| {para} para var de [a_de]:numero_int ate [a_ate]:numero_int faca sequencia_comandos fim_para ponto_virgula {-> New comando.para (var, a_de, a_ate, [sequencia_comandos.comando])  }   
+    		| {para_passo} para var de [a_de]:numero_int passo [a_passo]:numero_int ate [a_ate]:numero_int faca sequencia_comandos fim_para ponto_virgula {-> New comando.para_passo (var, a_de, a_passo, a_ate, [sequencia_comandos.comando])  }  
+    		| {enquanto} enquanto parentese_e exp_logica parentese_d faca sequencia_comandos fim_enquanto ponto_virgula {-> New comando.repita_explog ([sequencia_comandos.comando], exp_logica)  }   
+    		| {repita_explog} repita sequencia_comandos ate parentese_e exp_logica parentese_d ponto_virgula {-> New comando.repita_explog ([sequencia_comandos.comando], exp_logica)  }     
+    		| {avalie_exp} avalie parentese_e exp parentese_d sequencia_caso fim_avalie ponto_virgula {-> New comando.avalie_exp (exp, [sequencia_caso.estr_caso])  } 
+    		| {avalie_explog} avalie parentese_e exp_logica parentese_d sequencia_caso fim_avalie ponto_virgula {-> New comando.avalie_explog (exp_logica, [sequencia_caso.estr_caso])  }
+    		| {avalie_expsn} avalie parentese_e exp parentese_d sequencia_caso senao dois_pontos sequencia_comandos fim_avalie ponto_virgula {-> New comando.avalie_exp_senao (exp, [sequencia_caso.estr_caso], [sequencia_comandos.comando])  }     
+    		| {avalie_explogsn} avalie parentese_e exp_logica parentese_d sequencia_caso senao dois_pontos sequencia_comandos fim_avalie ponto_virgula {-> New comando.avalie_explog_senao (exp_logica , [sequencia_caso.estr_caso], [sequencia_comandos.comando])  }  ;
+
+
+sequencia_comandos {->comando*} = {simples} comando+ {-> [comando]} ;
+
+
+exp_aux {->exp_aux} = {exp1} virgula exp  {-> New exp_aux.exp(exp)}  
+    	|   {exp_logica1} virgula exp_logica {-> New exp_aux.exp_logica1(exp_logica)};
+
+exps{-> exp_aux*}  = {caso_simples} exp_aux  {-> [exp_aux.exp_aux]}    
+    	|      {caso_multiplo} exps exp_aux{-> [exps.exp_aux , exp_aux.exp_aux]};
+    	
+variaveis{-> var*} = {variaveis_simples} var {-> [var]}
+    		| {variaveis_variaveis} variaveis virgula var{-> [variaveis.var,var]};
+
+
+estr_caso {-> estr_caso}  = caso valor dois_pontos sequencia_comandos {-> New estr_caso(caso,valor,[sequencia_comandos.comando])};
+    
+sequencia_caso {-> estr_caso*} = {caso_simples} estr_caso  {-> [estr_caso.estr_caso]}
+    		| {caso_multiplo} sequencia_caso estr_caso  {-> [sequencia_caso.estr_caso,estr_caso.estr_caso]};
+
+exp {-> exp}  = {termo} termo  {-> termo.exp}
+     | {mais} exp mais termo {-> New exp.mais(exp,termo.exp)}
+| {menos} exp menos termo {-> New exp.menos(exp,termo.exp)};	
+
+
+termo {-> exp} = {fator} fator {-> fator.exp}
+    		| {mult} termo vezes fator {-> New exp.mult(termo.exp,fator.exp)}
+    		| {div} termo dividido fator  {-> New exp.div(termo.exp,fator.exp)};
+
+fator{-> exp} = {variavel} var {-> New exp.variavel(var)}
+    		| {valor} valor {-> New exp.valor(valor)}
+    		| {exp} parentese_e exp parentese_d {-> exp};
+
+exp_logica {-> exp_logica} = {exp_ou} exp_xor {-> exp_xor.exp_logica}
+    		| {exp_nao_ou} nao exp_logica  {-> New exp_logica.exp_nao_ou(nao,exp_logica)};
+
+exp_xor {->exp_logica} = {caso_simples} exp_ou {-> exp_ou.exp_logica}
+    		| {xor} exp_xor xor exp_ou  {-> New exp_logica.xor(exp_xor.exp_logica, exp_ou.exp_logica)};
+
+exp_ou {-> exp_logica}  = {caso_simples} exp_e {-> exp_e.exp_logica}
+    		| {ou} exp_ou ou exp_e {-> New exp_logica.ou(exp_ou.exp_logica, exp_e.exp_logica)};
+
+exp_e {-> exp_logica} = {caso_simples} exp_igual {-> exp_igual.exp_logica}
+    		| {e} exp_e e exp_igual {-> New exp_logica.e(exp_e.exp_logica, exp_igual.exp_logica)};
+
+
+exp_igual {-> exp_logica} = {caso_simples} exp_relacional {-> exp_relacional.exp_logica}
+    		| {exp_igual} [esquerda]: exp igual [direita]: exp {-> New exp_logica.exp_igual(esquerda.exp, direita.exp)}
+			| {exp_diferente} [esquerda]: exp diferente [direita]: exp {-> New exp_logica.exp_diferente(esquerda.exp, direita.exp)};
+
+
+exp_relacional {-> exp_logica} = {exp_final} exp_final {-> exp_final.exp_logica}
+    		| {exp_menor} [left]: exp menor [right]: exp {-> New exp_logica.exp_menor(left.exp, right.exp)}
+    		| {exp_menor_igual} [left]: exp menor_igual [right]: exp {-> New exp_logica.exp_menor_igual(left.exp, right.exp)}
+    		| {exp_maior} [left]: exp maior [right]: exp {-> New exp_logica.exp_maior(left.exp, right.exp)}
+    		| {exp_maior_igual} [left]: exp maior_igual [right]: exp {-> New exp_logica.exp_maior_igual(left.exp, right.exp)};
+
+exp_final {-> exp_logica} = {exp_logica} parentese_e exp_logica parentese_d {-> exp_logica};
+
+
+
+
+Abstract Syntax Tree
+
+programas = identificador declaracao* comando*;
+
+declaracao = {variaveis} tipo var*
+	| {constantes} const var valor;
+
+var = {identificador} identificador 
+        | {vetor} identificador colchete_e numero_int colchete_d;
+
+     		
+string = {ssimples} char 
+	|{schar} caracter;
+
+
+tipo = {inteiro} inteiro 
+        |  {string} string
+        |  {real} real;
+
+valor = {string} string 
+        | {inteiro} numero_int 
+        | {real} numero_real;
+
+exp_aux = {exp} exp 
+       | {exp_logica1} exp_logica ;
+
+comando = {receber_exp} var exp
+         | {receber_explog} var exp_logica
+         | {escreva_exp} exp exp_aux* 
+         | {escreva_explog} exp_logica exp_aux*
+         | {leia} var*
+         | {se_explog} [condicao]:exp_logica comando*
+         | {se_explog_senao} exp_logica [se_v]:comando* [senao_f]:comando*
+         | {para} var [a_de]:numero_int [a_ate]:numero_int comando*
+         | {para_passo} var [a_de]:numero_int [a_passo]:numero_int [a_ate]:numero_int comando*
+         | {enquanto} [condicao]:exp_logica comando*
+         | {repita_explog} [repita]:comando* [condicao]:exp_logica
+         | {avalie_exp} [avalie]:exp estr_caso*
+         | {avalie_explog} [avalie]:exp_logica estr_caso*
+         | {avalie_exp_senao} [avalie]:exp estr_caso* [senao]:comando*
+         | {avalie_explog_senao} [avalie]:exp_logica estr_caso* [senao]:comando*;
+
+estr_caso = caso valor comando*;
+
+exp  = {mais} [left]:exp  [right]:exp
+         | {menos} [left]:exp  [right]:exp
+         | {mult} [left]:exp  [right]:exp
+         | {div} [left]:exp  [right]:exp
+         | {variavel} var
+         | {valor} valor
+         | {menos_exp} menos exp;
+      
+exp_logica = {exp_nao_ou} nao exp_logica
+               | {xor} [left]:exp_logica [right]:exp_logica
+               | {ou} [left]:exp_logica [right]:exp_logica
+               | {e} [left]:exp_logica [right]:exp_logica
+               | {exp_igual} [left]: exp [right]: exp
+               | {exp_diferente} [left]: exp [right]: exp
+               | {exp_menor} [left]:exp [right]:exp
+               | {exp_menor_igual} [left]:exp [right]:exp
+               | {exp_maior} [left]:exp [right]:exp
+               | {exp_maior_igual} [left]:exp [right]:exp;
+
